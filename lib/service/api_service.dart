@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:newsfeed_app/model/comment.dart';
 import 'package:newsfeed_app/model/news_post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,7 +47,20 @@ class ApiService {
     if (response.statusCode == 200) {
       return NewsPost.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception("Filed to load Product details");
+      throw Exception("Filed to load news details");
+    }
+  }
+
+  Future<List<Comment>> getComments(int newsId) async {
+    final response = await http.get(
+      Uri.parse('https://dummyjson.com/comments/post/$newsId'),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body)['comments'];
+      return data.map((e) => Comment.fromJson(e)).toList();
+    } else {
+      throw Exception("Failed to load comments");
     }
   }
 }

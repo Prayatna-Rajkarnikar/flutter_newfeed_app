@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsfeed_app/model/news_post.dart';
+import 'package:newsfeed_app/screens/comment_screen.dart';
 import 'package:newsfeed_app/service/api_service.dart';
 
 class NewsfeedDetail extends StatefulWidget {
@@ -23,6 +24,7 @@ class _NewsfeedDetailState extends State<NewsfeedDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: FutureBuilder(
         future: _newsDetail,
         builder: (context, snapshot) {
@@ -32,7 +34,22 @@ class _NewsfeedDetailState extends State<NewsfeedDetail> {
             return (Center(child: Text("Error loading details")));
           } else {
             final news = snapshot.data!;
-            return Column(children: [Text(news.title), Text(news.body)]);
+            return Column(
+              children: [
+                Text(news.title),
+                Text(news.body),
+                IconButton(
+                  onPressed:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CommentScreen(newsID: news.id),
+                        ),
+                      ),
+                  icon: Icon(Icons.comment_rounded),
+                ),
+              ],
+            );
           }
         },
       ),
