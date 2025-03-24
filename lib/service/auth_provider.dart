@@ -10,6 +10,12 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> login(String username, String password) async {
     _user = await ApiService().login(username, password);
+
+    if (_user != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', _user!.token);
+    }
+
     notifyListeners();
     return _user != null;
   }
