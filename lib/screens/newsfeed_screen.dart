@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsfeed_app/model/news_post.dart';
+import 'package:newsfeed_app/screens/newsfeed_detail.dart';
 import 'package:newsfeed_app/service/api_service.dart';
 
 class NewsfeedScreen extends StatefulWidget {
@@ -34,12 +35,25 @@ class _NewsfeedScreenState extends State<NewsfeedScreen> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final post = snapshot.data![index];
-                return Card(
-                  margin: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Text(post.title), Text(post.body)],
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NewsfeedDetail(newsId: post.id),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      margin: EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Text(post.title), Text(post.body)],
+                      ),
+                    ),
                   ),
                 );
               },

@@ -37,4 +37,16 @@ class ApiService {
       throw Exception("Failed to laod news");
     }
   }
+
+  Future<NewsPost> getNewsDetail(int id) async {
+    final response = await http.get(
+      Uri.parse("https://dummyjson.com/posts/$id"),
+    );
+
+    if (response.statusCode == 200) {
+      return NewsPost.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Filed to load Product details");
+    }
+  }
 }
