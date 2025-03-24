@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:newsfeed_app/service/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,27 +10,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  bool isLoading = false;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> loginUser() async {
-    String username = usernameController.text.trim();
-    String password = passwordController.text.trim();
+  void _login() async {
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    final response = await http.post(
-      Uri.parse('https://dummyjson.com/auth/login'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"username": username, "password": password}),
-    );
+    bool success = await authProvider.login(username, password);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print("Login Successful: ${data}");
-
+    if (success) {
       Navigator.pushReplacementNamed(context, '/newsfeed_screen');
     } else {
-      print("Login failed: ${response.body}");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Login failed.")));
     }
   }
 
@@ -45,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
           spacing: 12,
           children: [
             TextField(
-              controller: usernameController,
+              controller: _usernameController,
               decoration: InputDecoration(
                 hintText: "Enter username",
                 border: OutlineInputBorder(
@@ -57,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             TextField(
-              controller: passwordController,
+              controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: "Enter password",
@@ -70,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            ElevatedButton(onPressed: loginUser, child: Text('Login')),
+            ElevatedButton(onPressed: _login, child: Text('Login')),
           ],
         ),
       ),
