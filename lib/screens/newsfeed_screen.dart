@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsfeed_app/model/news_post.dart';
+import 'package:newsfeed_app/screens/add_newspost.dart';
 import 'package:newsfeed_app/screens/newsfeed_detail.dart';
 import 'package:newsfeed_app/service/api_service.dart';
 
@@ -22,7 +23,19 @@ class _NewsfeedScreenState extends State<NewsfeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Newsfeed")),
+      appBar: AppBar(
+        title: Text("Newsfeed"),
+        actions: [
+          IconButton(
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddPostScreen()),
+                ),
+            icon: Icon(Icons.add_box_rounded),
+          ),
+        ],
+      ),
       body: FutureBuilder(
         future: _newsPosts,
         builder: (context, snapshot) {
